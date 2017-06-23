@@ -1,0 +1,36 @@
+* Hostname was found in DNS cache
+* Hostname in DNS cache was stale, zapped
+*   Trying 172.17.255.51...
+* Connected to ryan.powercode.com (172.17.255.51) port 444 (#20)
+* successfully set certificate verify locations:
+*   CAfile: none
+  CApath: /etc/ssl/certs
+* SSL connection using ECDHE-RSA-AES128-SHA256
+* Server certificate:
+* 	 subject: C=--; ST=SomeState; L=SomeCity; O=SomeOrganization; OU=SomeOrganizationalUnit; CN=powercode; emailAddress=root@powercode
+* 	 start date: 2016-07-06 22:53:21 GMT
+* 	 expire date: 2017-07-06 22:53:21 GMT
+* 	 issuer: C=--; ST=SomeState; L=SomeCity; O=SomeOrganization; OU=SomeOrganizationalUnit; CN=powercode; emailAddress=root@powercode
+* 	 SSL certificate verify result: unable to get local issuer certificate (20), continuing anyway.
+> POST /api/1/ HTTP/1.1
+Host: ryan.powercode.com:444
+Accept: */*
+Content-Length: 380
+Expect: 100-continue
+Content-Type: multipart/form-data; boundary=------------------------f28e7de0b05c4ea3
+
+< HTTP/1.1 100 Continue
+< HTTP/1.1 200 OK
+< Date: Fri, 16 Dec 2016 19:34:42 GMT
+* Server Apache is not blacklisted
+< Server: Apache
+< Set-Cookie: PHPSESSID=k48fa182pok9tcqt6sr53gj4f0; path=/
+< Expires: Thu, 19 Nov 1981 08:52:00 GMT
+< Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+< Pragma: no-cache
+< Vary: Accept-Encoding
+< Content-Length: 948
+< Connection: close
+< Content-Type: application/json
+< 
+* Closing connection 20
