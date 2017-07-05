@@ -4,13 +4,16 @@ $globalPostBody = array (
     'action' => 'searchCustomers',
     'searchString' => $_POST['searchString']
 );
-//error_log(print_r($_POST['endpoint'],true));
+
 /*
 'url' => "https://ryan.powercode.com:444/api/1/"
-'apiKey' => "4d08aivn7fi8sxuc0bdtw5b89ouhxbb5"
+'apiKey' => "179dduwll9ybbnvsd64bquitlhqbuyds"
 
 'url' => "https://172.17.255.52:444/api/1/",
 'apiKey' => "zt1w2wfzpmln4c55gkpbzxbhq73nktx1"
+
+'url' => "https://172.17.255.166:444/api/1/",
+'apiKey' => "6ggtzj4j4fnklu1vr6pv0q0ho6elq5mc"
 */
 $endpoints = $_POST['endpoint'];
 $result = array();
@@ -28,20 +31,12 @@ foreach ($endpoints as $endpoint) {
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $postBody);
 
-    array_push($result, json_decode(curl_exec($ch), true));
+    $return = json_decode(curl_exec($ch), true);
+    $return['url'] = preg_replace( '/\/api\/1\/?/', '', $endpoint['url']);
 
-    $response = json_decode(curl_exec($ch), true);
-    $err = curl_error($ch);
+    array_push($result, $return);
 
     curl_close($ch);
-
-    if ($err) {
-        $err = "cURL Error #:" . $err;
-    }
-}
-
-if ($err) {
-    echo "cURL Error #:" . $err;
 }
 
 echo json_encode($result);
