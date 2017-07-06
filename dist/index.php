@@ -32,6 +32,5 @@
     </div>
 </div>
 <script src="http://localhost:35729/livereload.js"></script>
-<script type="text/javascript" src="index_bundle.js"></script>
-</body>
+<script type="text/javascript" src="index_bundle.js"></script></body>
 </html>

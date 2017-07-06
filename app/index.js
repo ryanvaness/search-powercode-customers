@@ -1,7 +1,9 @@
 'use strict';
-const axios = require('axios');
+import _ from './modules/underscore.js';
+import axios from 'axios';
 
-(function(axios){
+(function(window){
+    let document = window.document;
 
     document.getElementById('searchForm').onsubmit = function handleSubmission(e) {
         axios({
@@ -36,7 +38,8 @@ const axios = require('axios');
                  `;
 
             });
-            document.getElementById('customers').innerHTML= customerHTML.replace(/(^|\n)\s*/g, '');
+
+            _('customers').get().innerHTML = customerHTML.replace(/(^|\n)\s*/g, '');
         }).catch(function (e) {
             switch (e.constructor) {
                 case PCError:
@@ -53,8 +56,8 @@ const axios = require('axios');
     document.body.addEventListener('click', function delegateClick(e) {
         const theTarget = e.target;
 
-        if (theTarget.classList.contains('removeEndpoint')) {
-            theTarget.closestClass('endpoint').remove();
+        if (_(theTarget).hasClass('removeEndpoint')) {
+            _(theTarget).closestClass('endpoint').remove();
         } else if (theTarget.id === 'addEndpoint') {
             let allNodes = document.getElementsByClassName('endpoint'),
                 lastNode = allNodes[allNodes.length - 1],
@@ -67,7 +70,6 @@ const axios = require('axios');
                 <input title="URL Endpoint" type="text" class="apiUrl" name="endpoint[${num}][url]" placeholder="URL Endpoint"/>
                 <button type="button" class="btn btn-danger removeEndpoint">Remove Endpoint</button>
             `;
-            console.log('derp');
             lastNode.parentNode.insertBefore(newNode, lastNode.nextSibling);
         }
     });
@@ -97,20 +99,5 @@ const axios = require('axios');
 
     let nextNumber = numberGenerator(1);
 
-    HTMLElement.prototype.closestClass = function(elemClass) {
-        let element = this;
-        while (element.parentNode) {
-            element = element.parentNode;
-            if (element.classList.contains(elemClass)) {
-                break;
-            }
-        }
-        return element;
-    };
-
-    HTMLElement.prototype.remove = function() {
-        this.parentNode.removeChild(this);
-    };
-
-})(axios);
+})(window);
 

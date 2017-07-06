@@ -13,7 +13,7 @@ $globalPostBody = array (
 'apiKey' => "zt1w2wfzpmln4c55gkpbzxbhq73nktx1"
 
 'url' => "https://172.17.255.166:444/api/1/",
-'apiKey' => "6ggtzj4j4fnklu1vr6pv0q0ho6elq5mc"
+'apiKey' => "kv8tntitonn4nc1zxifjm3f6xw0uwfw0"
 */
 $endpoints = $_POST['endpoint'];
 $result = array();
