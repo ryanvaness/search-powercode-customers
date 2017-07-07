@@ -16,9 +16,14 @@ module.exports = {
         filename: 'index_bundle.js'
     },
     module: {
-        loaders: [
-            { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
-        ]
+        loaders: [{
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: "babel-loader"
+        }, {
+            test: /\.s?css$/,
+            loaders: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
+        }]
     },
     plugins: [
         HtmlWebpackPluginConfig,

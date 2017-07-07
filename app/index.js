@@ -1,6 +1,8 @@
 'use strict';
 import _ from './modules/underscore.js';
 import axios from 'axios';
+import swal from 'sweetalert2';
+import './styles.scss'
 
 (function(window){
     let document = window.document;
@@ -13,10 +15,17 @@ import axios from 'axios';
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             responseType: 'json'
         }).then(function (response) {
+            console.log(response);
+            _('customers').html();
             let customerHTML = '';
             response.data.forEach(function eachPowercode(pc) {
                 if (pc.statusCode !== 0) {
-                    throw new PCError(pc);
+                    // swal(
+                    //     'Error',
+                    //     'Something went wrong',
+                    //     'error'
+                    // )
+                    swal('Hello world!')
                 }
                 customerHTML += `
                     <div class="pcInstance">
@@ -43,10 +52,10 @@ import axios from 'axios';
         }).catch(function (e) {
             switch (e.constructor) {
                 case PCError:
-                    console.log(e.message);
+                    console.error(e.message);
                     break;
                 default:
-                    console.log('ERROR', e);
+                    console.error('ERROR', e);
                     break;
             }
         });

@@ -47,6 +47,10 @@ __.prototype = {
         return this;
     },
 
+    html: function (htmlString = '') {
+        this.element.innerHTML = htmlString;
+    }
+
 };
 let _ = function(select) {return new __(select)};
 export default _;

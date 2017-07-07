@@ -1,10 +1,21 @@
 <?php
 
-$globalPostBody = array (
+$globalPostBody = array(
     'action' => 'searchCustomers',
     'searchString' => $_POST['searchString']
 );
-
+error_log($_POST['searchString']);
+if (empty($_POST['searchString'])) {
+    echo json_encode(
+        array(
+            array(
+                'statusCode' => 400,
+                'message' => 'Search string cannot be empty'
+            )
+        )
+    );
+    exit();
+}
 /*
 'url' => "https://ryan.powercode.com:444/api/1/"
 'apiKey' => "179dduwll9ybbnvsd64bquitlhqbuyds"
@@ -17,26 +28,47 @@ $globalPostBody = array (
 */
 $endpoints = $_POST['endpoint'];
 $result = array();
-$err = '';
 
 foreach ($endpoints as $endpoint) {
-    $endpointPostBody = array('apiKey' => $endpoint['apiKey']);
+    try {
+        $endpointPostBody = array('apiKey' => $endpoint['apiKey']);
+        if (empty($endpoint['apiKey'])) {
+            throw new Exception('API key can not be empty');
+        }
+        if (empty($endpoint['url'])) {
+            throw new Exception('URL endpoint can not be empty');
+        }
 
-    $postBody = array_merge($endpointPostBody, $globalPostBody);
+        $postBody = array_merge($endpointPostBody, $globalPostBody);
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $endpoint['url']);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $postBody);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $endpoint['url']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postBody);
 
-    $return = json_decode(curl_exec($ch), true);
-    $return['url'] = preg_replace( '/\/api\/1\/?/', '', $endpoint['url']);
+        $return = json_decode(curl_exec($ch), true);
+        if (empty($return)) {
+            array_push(
+                $result,
+                array(
+                    'statusCode' => 400,
+                    'message' => 'Something went wrong'
+                )
+            );
+            continue;
+        }
+        error_log(print_r($return, true));
+        $return['url'] = preg_replace('/\/api\/1\/?/', '', $endpoint['url']);
 
-    array_push($result, $return);
+        array_push($result, $return);
 
-    curl_close($ch);
+        curl_close($ch);
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        continue;
+    }
 }
 
 echo json_encode($result);
