@@ -4,7 +4,7 @@ import axios from 'axios';
 import swal from 'sweetalert2';
 import './styles.scss'
 
-(function(window){
+(function (window) {
     let document = window.document;
 
     document.getElementById('searchForm').onsubmit = function handleSubmission(e) {
@@ -15,21 +15,16 @@ import './styles.scss'
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             responseType: 'json'
         }).then(function (response) {
-            console.log(response);
             _('customers').html();
             let customerHTML = '';
             response.data.forEach(function eachPowercode(pc) {
                 if (pc.statusCode !== 0) {
-                    // swal(
-                    //     'Error',
-                    //     'Something went wrong',
-                    //     'error'
-                    // )
-                    swal('Hello world!')
+                    swal('Error', pc.message, 'error');
+                    return;
                 }
                 customerHTML += `
                     <div class="pcInstance">
-                        <h2>Customers From ${pc.url}</h2>
+                        <h2>Customers from ${pc.url}</h2>
                 `;
                 if (pc.customers.length) {
                     customerHTML += pc.customers.map(function eachCustomer(customer) {
@@ -50,14 +45,7 @@ import './styles.scss'
 
             _('customers').get().innerHTML = customerHTML.replace(/(^|\n)\s*/g, '');
         }).catch(function (e) {
-            switch (e.constructor) {
-                case PCError:
-                    console.error(e.message);
-                    break;
-                default:
-                    console.error('ERROR', e);
-                    break;
-            }
+            console.error('ERROR', e);
         });
         return false;
     };
@@ -83,13 +71,13 @@ import './styles.scss'
         }
     });
 
-    const numberGenerator = function(startingNumber) {
+    const numberGenerator = function (startingNumber) {
         return (function () {
             return startingNumber++;
         });
     };
 
-    const generateCustomerHTML = function(customer, url) {
+    const generateCustomerHTML = function (customer, url) {
         return `
             <div class="customer">
                 ${customer.CustomerID}<br>
@@ -100,11 +88,6 @@ import './styles.scss'
             </div>
         `;
     };
-
-    function PCError(pcInstance) {
-        this.statusCode = pcInstance.statusCode;
-        this.message = pcInstance.message;
-    }
 
     let nextNumber = numberGenerator(1);
 

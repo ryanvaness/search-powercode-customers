@@ -1,18 +1,9 @@
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
-    template: __dirname + '/app/index.php',
-    filename: 'index.php',
-    inject: 'body'
-});
-var LiveReloadPlugin = require('webpack-livereload-plugin');
-
-
+const LiveReloadPlugin = require('webpack-livereload-plugin');
 module.exports = {
     entry: [
-        './app/index.js'
+        `${__dirname}/index.js`
     ],
     output: {
-        path: __dirname + '/dist',
         filename: 'index_bundle.js'
     },
     module: {
@@ -26,7 +17,6 @@ module.exports = {
         }]
     },
     plugins: [
-        HtmlWebpackPluginConfig,
         new LiveReloadPlugin()
     ]
 };

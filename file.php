@@ -17,7 +17,7 @@ if (empty($_POST['searchString'])) {
     exit();
 }
 /*
-'url' => "https://ryan.powercode.com:444/api/1/"
+'url' => "https://ryan.powercode.com:444/api/1/",
 'apiKey' => "179dduwll9ybbnvsd64bquitlhqbuyds"
 
 'url' => "https://172.17.255.52:444/api/1/",
@@ -50,23 +50,24 @@ foreach ($endpoints as $endpoint) {
 
         $return = json_decode(curl_exec($ch), true);
         if (empty($return)) {
-            array_push(
-                $result,
-                array(
-                    'statusCode' => 400,
-                    'message' => 'Something went wrong'
-                )
+            $return = array(
+                'statusCode' => 400,
+                'message' => 'Something went wrong'
             );
-            continue;
         }
-        error_log(print_r($return, true));
         $return['url'] = preg_replace('/\/api\/1\/?/', '', $endpoint['url']);
 
         array_push($result, $return);
 
         curl_close($ch);
     } catch (Exception $e) {
-        error_log($e->getMessage());
+        array_push(
+            $result,
+            array(
+                'statusCode' => 400,
+                'message' => $e->getMessage()
+            )
+        );
         continue;
     }
 }
