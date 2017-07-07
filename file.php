@@ -4,7 +4,7 @@ $globalPostBody = array(
     'action' => 'searchCustomers',
     'searchString' => $_POST['searchString']
 );
-error_log($_POST['searchString']);
+
 if (empty($_POST['searchString'])) {
     echo json_encode(
         array(

@@ -22,25 +22,7 @@ import './styles.scss'
                     swal('Error', pc.message, 'error');
                     return;
                 }
-                customerHTML += `
-                    <div class="pcInstance">
-                        <h2>Customers from ${pc.url}</h2>
-                `;
-                if (pc.customers.length) {
-                    customerHTML += pc.customers.map(function eachCustomer(customer) {
-                        return generateCustomerHTML(customer, pc.url);
-                    }).join('');
-                } else {
-                    customerHTML += `
-                        <div class="noneFound">
-                            <em>None Found</em>
-                        </div>
-                    `;
-                }
-                customerHTML += `
-                    </div>
-                 `;
-
+                customerHTML += generatePowercodeHTML(pc);
             });
 
             _('customers').get().innerHTML = customerHTML.replace(/(^|\n)\s*/g, '');
@@ -77,15 +59,63 @@ import './styles.scss'
         });
     };
 
+    const generatePowercodeHTML = function (pc) {
+        let customerHTML = `
+            <div class="pcInstance panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Customers from ${pc.url}</h3>
+                    <div class="pull-right">
+                        <span class="clickable filter" data-toggle="tooltip" title="Toggle table filter" data-container="body">
+                            <i class="glyphicon glyphicon-filter"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <input type="text" class="form-control" id="customer-table-filter" data-action="filter" data-filters="#customer-table" placeholder="Filter Customers" />
+                </div>
+        `;
+        if (pc.customers.length) {
+            customerHTML += `
+                <table class="table table-hover" id="customer-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Address 1</th>
+                            <th>City</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            customerHTML += pc.customers.map(function eachCustomer(customer) {
+                return generateCustomerHTML(customer, pc.url);
+            }).join('');
+            customerHTML += `
+                    </tbody>
+                </table>
+            `;
+        } else {
+            customerHTML += `
+                <div class="noneFound">
+                    <em>None Found</em>
+                </div>
+            `;
+        }
+        customerHTML += `
+            </div>
+         `;
+
+        return customerHTML;
+    };
+
     const generateCustomerHTML = function (customer, url) {
         return `
-            <div class="customer">
-                ${customer.CustomerID}<br>
-                <a href="${url}/index.php?q&page=/customers/_view.php&customerid=${customer.CustomerID}" target="_blank">${customer.CompanyName}</a><br>
-                ${customer.Address1}<br>
-                ${customer.City}<br>
-                <hr/>
-            </div>
+            <tr>
+                <td>${customer.CustomerID}</td>
+                <td><a href="${url}/index.php?q&page=/customers/_view.php&customerid=${customer.CustomerID}" target="_blank">${customer.CompanyName}</a></td>
+                <td>${customer.Address1}</td>
+                <td>${customer.City}</td>
+            </tr>
         `;
     };
 
