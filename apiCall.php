@@ -16,17 +16,22 @@ if (empty($_POST['searchString'])) {
     );
     exit();
 }
-/*
-'url' => "https://ryan.powercode.com:444/api/1/",
-'apiKey' => "179dduwll9ybbnvsd64bquitlhqbuyds"
 
-'url' => "https://172.17.255.52:444/api/1/",
-'apiKey' => "zt1w2wfzpmln4c55gkpbzxbhq73nktx1"
+$endpoints = array(
+    array(
+        'url' => "https://ryan.powercode.com:444/api/1/",
+        'apiKey' => "179dduwll9ybbnvsd64bquitlhqbuyds"
+    ),
+    array(
+        'url' => "https://172.17.255.52:444/api/1/",
+        'apiKey' => "zt1w2wfzpmln4c55gkpbzxbhq73nktx1"
+    ),
+    array(
+        'url' => "https://172.17.255.166:444/api/1/",
+        'apiKey' => "kv8tntitonn4nc1zxifjm3f6xw0uwfw0"
+    )
+);
 
-'url' => "https://172.17.255.166:444/api/1/",
-'apiKey' => "kv8tntitonn4nc1zxifjm3f6xw0uwfw0"
-*/
-$endpoints = $_POST['endpoint'];
 $result = array();
 
 foreach ($endpoints as $endpoint) {

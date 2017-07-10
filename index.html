@@ -5,24 +5,16 @@
     <title>Search Powercode</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./styles.css" rel="stylesheet">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-without-jquery/0.6.1/bootstrap3/bootstrap-without-jquery.min.js"></script>
+
 </head>
 
 <body>
 <div class="container-fluid">
-    <div class="row">
+    <div class="row search-box">
         <div class="col-md-12 show-grid">
             <form method="post" id="searchForm">
-                <div class="col-md-4">
-                    <div class="endpoint form-group">
-                        <input title="API Key" type="text" class="apiKey form-control" name="endpoint[0][apiKey]" placeholder="API Key"/>
-                        <input title="URL Endpoint" type="text" class="apiUrl form-control" name="endpoint[0][url]" placeholder="URL Endpoint"/>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-success" type="button" id="addEndpoint">Add Endpoint</button>
-                    </div>
-                </div>
                 <div class="col-md-12">
                     <div class="input-group stylish-input-group">
                         <input type="text" class="form-control" placeholder="Search" id="searchString" name="searchString">
@@ -43,7 +35,6 @@
         </div>
     </div>
 </div>
-<script src="http://localhost:35729/livereload.js"></script>
-<script type="text/javascript" src="index_bundle.js"></script>
+<script type="text/javascript" src="index.js"></script>
 </body>
 </html>

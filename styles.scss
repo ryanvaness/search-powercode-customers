@@ -1,5 +1,15 @@
-@import '~sweetalert2/src/sweetalert2.scss';
+@import './node_modules/sweetalert2/src/sweetalert2.scss';
+$icon-font-path: 'node_modules/bootstrap-sass/assets/fonts/bootstrap/';
+@import 'node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
 
+.search-box {
+  background-color: #00B0FF;
+  padding: 30px;
+
+  &.row {
+    margin-top: 0;
+  }
+}
 .stylish-input-group {
 
   .input-group-addon{
