@@ -5,7 +5,7 @@
   .input-group-addon{
     background: white !important;
   }
-  .form-control{
+  .form-control {
     border-right:0;
     box-shadow:0 0 0;
     border-color:#ccc;
@@ -31,4 +31,8 @@
 
 .panel-body{
   display: none;
+}
+
+.row {
+  margin-top: 20px;
 }

@@ -12,28 +12,38 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-md-12 show-grid">
             <form method="post" id="searchForm">
-                <div class="endpoint form-group" id="enpoint0">
-                    <input title="API Key" type="text" id="apiKey0" class="apiKey" name="endpoint[0][apiKey]" placeholder="API Key"/>
-                    <input title="URL Endpoint" type="text" id="url0" class="apiUrl" name="endpoint[0][url]" placeholder="URL Endpoint"/>
+                <div class="col-md-4">
+                    <div class="endpoint form-group">
+                        <input title="API Key" type="text" class="apiKey form-control" name="endpoint[0][apiKey]" placeholder="API Key"/>
+                        <input title="URL Endpoint" type="text" class="apiUrl form-control" name="endpoint[0][url]" placeholder="URL Endpoint"/>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-success" type="button" id="addEndpoint">Add Endpoint</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <button class="btn btn-success" type="button" id="addEndpoint">Add Endpoint</button>
-                </div>
-                <div class="input-group stylish-input-group">
-                    <input type="text" class="form-control" placeholder="Search" id="searchString" name="searchString">
-                    <span class="input-group-addon">
+                <div class="col-md-12">
+                    <div class="input-group stylish-input-group">
+                        <input type="text" class="form-control" placeholder="Search" id="searchString" name="searchString">
+                        <span class="input-group-addon">
                         <button type="submit">
                             <span class="glyphicon glyphicon-search"></span>
                         </button>
                     </span>
+                    </div>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
             <div id="customers"></div>
         </div>
     </div>
 </div>
 <script src="http://localhost:35729/livereload.js"></script>
-<script type="text/javascript" src="index_bundle.js"></script></body>
+<script type="text/javascript" src="index_bundle.js"></script>
+</body>
 </html>

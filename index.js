@@ -10,7 +10,7 @@ import './styles.scss'
     document.getElementById('searchForm').onsubmit = function handleSubmission(e) {
         axios({
             method: 'post',
-            url: 'file.php',
+            url: 'apiCall.php',
             data: new FormData(e.target),
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             responseType: 'json'
@@ -26,18 +26,20 @@ import './styles.scss'
             });
 
             _('customers').get().innerHTML = customerHTML.replace(/(^|\n)\s*/g, '');
-        }).catch(function (e) {
+            _(document.getElementsByClassName('filter-table')).filterTable();
+        }).catch(function caughtError(e) {
             console.error('ERROR', e);
         });
         return false;
     };
 
+    // Attach all event listeners by delegation
     document.body.addEventListener('click', function delegateClick(e) {
-        const theTarget = e.target;
+        const _theTarget = _(e.target);
 
-        if (_(theTarget).hasClass('removeEndpoint')) {
-            _(theTarget).closestClass('endpoint').remove();
-        } else if (theTarget.id === 'addEndpoint') {
+        if (_theTarget.hasClass('removeEndpoint')) { // remove endpoint
+            _theTarget.closestClass('endpoint').remove();
+        } else if (_theTarget.get().id === 'addEndpoint') { // add endpoint
             let allNodes = document.getElementsByClassName('endpoint'),
                 lastNode = allNodes[allNodes.length - 1],
                 num = nextNumber(),
@@ -45,11 +47,18 @@ import './styles.scss'
 
             newNode.className = 'endpoint form-group';
             newNode.innerHTML = `
-                <input title="API Key" type="text" class="apiKey" name="endpoint[${num}][apiKey]" placeholder="API Key"/>
-                <input title="URL Endpoint" type="text" class="apiUrl" name="endpoint[${num}][url]" placeholder="URL Endpoint"/>
+                <input title="API Key" type="text" class="apiKey form-control" name="endpoint[${num}][apiKey]" placeholder="API Key"/>
+                <input title="URL Endpoint" type="text" class="apiUrl form-control" name="endpoint[${num}][url]" placeholder="URL Endpoint"/>
                 <button type="button" class="btn btn-danger removeEndpoint">Remove Endpoint</button>
             `;
             lastNode.parentNode.insertBefore(newNode, lastNode.nextSibling);
+        } else if (_theTarget.hasClass('filter') || _theTarget.hasClass('glyphicon-filter')) { // show/hide filter
+            let _panelBody = _theTarget.closestClass('panel-heading').next();
+            if (_panelBody.isVisible()) {
+                _panelBody.hide();
+            } else {
+                _panelBody.show();
+            }
         }
     });
 
@@ -71,12 +80,12 @@ import './styles.scss'
                     </div>
                 </div>
                 <div class="panel-body">
-                    <input type="text" class="form-control" id="customer-table-filter" data-action="filter" data-filters="#customer-table" placeholder="Filter Customers" />
+                    <input type="text" class="filter-table form-control" id="customer-table-filter" data-action="filter" placeholder="Filter Customers" />
                 </div>
         `;
         if (pc.customers.length) {
             customerHTML += `
-                <table class="table table-hover" id="customer-table">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>ID</th>
