@@ -118,18 +118,13 @@
 
 	    // Generates html for this Powercode instance
 	    var generatePowercodeHTML = function generatePowercodeHTML(pc) {
-	        var customerHTML = '\n            <div class="pcInstance panel panel-primary">\n                <div class="panel-heading">\n                    <h3 class="panel-title">Customers from ' + pc.url + '</h3>\n                    <div class="pull-right">\n                        <span class="clickable filter" data-toggle="tooltip" title="Toggle table filter" data-container="body">\n                            <i class="glyphicon glyphicon-filter"></i>\n                        </span>\n                    </div>\n                </div>\n                <div class="panel-body">\n                    <input type="text" class="filter-table form-control" id="customer-table-filter" data-action="filter" placeholder="Filter Customers" />\n                </div>\n        ';
+	        var customerHTML = '\n            <div class="pcInstance panel panel-primary">\n                <div class="panel-heading">\n                    <h3 class="panel-title">Customers from ' + pc.name + '</h3>\n                    <div class="pull-right">\n                        <span class="clickable filter" data-toggle="tooltip" title="Toggle table filter" data-container="body">\n                            <i class="glyphicon glyphicon-filter"></i>\n                        </span>\n                    </div>\n                </div>\n                <div class="panel-body">\n                    <input type="text" class="filter-table form-control" id="customer-table-filter" data-action="filter" placeholder="Filter Customers" />\n                </div>\n                <table class="table table-hover">\n                    <thead>\n                        <tr>\n                            <th>ID</th>\n                            <th>Name</th>\n                            <th>Address 1</th>\n                            <th>City</th>\n                        </tr>\n                    </thead>\n                    <tbody>\n        ';
 	        if (pc.customers.length) {
-	            // if customers returned from api call
-	            customerHTML += '\n                <table class="table table-hover">\n                    <thead>\n                        <tr>\n                            <th>ID</th>\n                            <th>Name</th>\n                            <th>Address 1</th>\n                            <th>City</th>\n                        </tr>\n                    </thead>\n                    <tbody>\n            ';
 	            customerHTML += pc.customers.map(function eachCustomer(customer) {
 	                return generateCustomerHTML(customer, pc.url);
 	            }).join('');
-	            customerHTML += '\n                    </tbody>\n                </table>\n            ';
-	        } else {
-	            // no customers found
-	            customerHTML += '\n                <div class="noneFound">\n                    <em>None Found</em>\n                </div>\n            ';
 	        }
+	        customerHTML += '\n                    <tr class="search-sf" style="display: none;"><td class="text-muted" colspan="4">No entries found.</td></tr>\n                </tbody>\n            </table>\n        ';
 	        customerHTML += '\n            </div>\n         ';
 
 	        return customerHTML;
@@ -143,13 +138,16 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+
+	var _utilities = __webpack_require__(30);
+
 	var __ = function __(selector) {
 	    this.element = typeof selector === "string" ? document.getElementById(selector) : selector;
 	};
@@ -170,8 +168,12 @@
 	        return new __(elem);
 	    },
 
-	    find: function find(selector) {
+	    findAll: function findAll(selector) {
 	        return new __(this.element.querySelectorAll(selector));
+	    },
+
+	    findOne: function findOne(selector) {
+	        return new __(this.element.querySelector(selector));
 	    },
 
 	    remove: function remove() {
@@ -296,61 +298,73 @@
 	    },
 
 	    filterTable: function filterTable() {
-	        var _iteratorNormalCompletion3 = true;
-	        var _didIteratorError3 = false;
-	        var _iteratorError3 = undefined;
+	        var handleKeyUp = (0, _utilities.debounce)(function handleKeyUp() {
+	            var _this = _(this),
+	                filter = _this.get().value.toLowerCase(),
+	                _target = _this.closestClass('panel-body').next(),
+	                _tBody = _target.findOne('tbody'),
+	                _rows = _tBody.findAll('tr');
 
-	        try {
-	            for (var _iterator3 = this.get()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-	                var elem = _step3.value;
+	            if (filter === '') {
+	                _rows.show();
+	                _tBody.findOne('.search-sf').hide();
+	            } else {
+	                var anyAreVisible = false;
+	                var _iteratorNormalCompletion3 = true;
+	                var _didIteratorError3 = false;
+	                var _iteratorError3 = undefined;
 
-	                elem.addEventListener('keyup', function handleKeyUp() {
-	                    var _this = _(this),
-	                        search = _this.get().value.toLowerCase(),
-	                        _target = _this.closestClass('panel-body').next(),
-	                        _rows = _target.find('tbody tr');
+	                try {
+	                    for (var _iterator3 = _rows.get()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                        var row = _step3.value;
 
-	                    if (search === '') {
-	                        _rows.show();
-	                    } else {
-	                        var _iteratorNormalCompletion4 = true;
-	                        var _didIteratorError4 = false;
-	                        var _iteratorError4 = undefined;
-
-	                        try {
-	                            for (var _iterator4 = _rows.get()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-	                                var row = _step4.value;
-
-	                                row.innerText.toLowerCase().indexOf(search) === -1 ? _(row).hide() : _(row).show();
-	                            }
-	                        } catch (err) {
-	                            _didIteratorError4 = true;
-	                            _iteratorError4 = err;
-	                        } finally {
-	                            try {
-	                                if (!_iteratorNormalCompletion4 && _iterator4.return) {
-	                                    _iterator4.return();
-	                                }
-	                            } finally {
-	                                if (_didIteratorError4) {
-	                                    throw _iteratorError4;
-	                                }
-	                            }
+	                        row.innerText.toLowerCase().indexOf(filter) === -1 ? _(row).hide() : _(row).show();
+	                        if (_(row).isVisible() && !_(row).hasClass('search-sf')) {
+	                            anyAreVisible = true;
 	                        }
 	                    }
-	                });
+	                } catch (err) {
+	                    _didIteratorError3 = true;
+	                    _iteratorError3 = err;
+	                } finally {
+	                    try {
+	                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                            _iterator3.return();
+	                        }
+	                    } finally {
+	                        if (_didIteratorError3) {
+	                            throw _iteratorError3;
+	                        }
+	                    }
+	                }
+
+	                _tBody.findOne('.search-sf').hide();
+	                if (!anyAreVisible) {
+	                    _tBody.findOne('.search-sf').show();
+	                }
+	            }
+	        }, 250);
+	        var _iteratorNormalCompletion4 = true;
+	        var _didIteratorError4 = false;
+	        var _iteratorError4 = undefined;
+
+	        try {
+	            for (var _iterator4 = this.get()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                var elem = _step4.value;
+
+	                elem.addEventListener('keyup', handleKeyUp);
 	            }
 	        } catch (err) {
-	            _didIteratorError3 = true;
-	            _iteratorError3 = err;
+	            _didIteratorError4 = true;
+	            _iteratorError4 = err;
 	        } finally {
 	            try {
-	                if (!_iteratorNormalCompletion3 && _iterator3.return) {
-	                    _iterator3.return();
+	                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                    _iterator4.return();
 	                }
 	            } finally {
-	                if (_didIteratorError3) {
-	                    throw _iteratorError3;
+	                if (_didIteratorError4) {
+	                    throw _iteratorError4;
 	                }
 	            }
 	        }
@@ -3685,6 +3699,36 @@
 	})));
 	if (window.Sweetalert2) window.sweetAlert = window.swal = window.Sweetalert2;
 
+
+/***/ },
+/* 30 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	// Returns a function, that, as long as it continues to be invoked, will not
+	// be triggered. The function will be called after it stops being called for
+	// N milliseconds. If `immediate` is passed, trigger the function on the
+	// leading edge, instead of the trailing.
+	var debounce = exports.debounce = function debounceHandler(func, wait, immediate) {
+	    var timeout;
+	    return function () {
+	        var context = this,
+	            args = arguments;
+	        var later = function later() {
+	            timeout = null;
+	            if (!immediate) func.apply(context, args);
+	        };
+	        var callNow = immediate && !timeout;
+	        clearTimeout(timeout);
+	        timeout = setTimeout(later, wait);
+	        if (callNow) func.apply(context, args);
+	    };
+	};
 
 /***/ }
 /******/ ]);

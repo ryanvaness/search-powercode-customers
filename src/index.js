@@ -52,7 +52,7 @@ import swal from 'sweetalert2';
         let customerHTML = `
             <div class="pcInstance panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Customers from ${pc.url}</h3>
+                    <h3 class="panel-title">Customers from ${pc.name}</h3>
                     <div class="pull-right">
                         <span class="clickable filter" data-toggle="tooltip" title="Toggle table filter" data-container="body">
                             <i class="glyphicon glyphicon-filter"></i>
@@ -62,9 +62,6 @@ import swal from 'sweetalert2';
                 <div class="panel-body">
                     <input type="text" class="filter-table form-control" id="customer-table-filter" data-action="filter" placeholder="Filter Customers" />
                 </div>
-        `;
-        if (pc.customers.length) { // if customers returned from api call
-            customerHTML += `
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -75,21 +72,18 @@ import swal from 'sweetalert2';
                         </tr>
                     </thead>
                     <tbody>
-            `;
+        `;
+        if (pc.customers.length) {
             customerHTML += pc.customers.map(function eachCustomer(customer) {
                 return generateCustomerHTML(customer, pc.url);
             }).join('');
-            customerHTML += `
-                    </tbody>
-                </table>
-            `;
-        } else { // no customers found
-            customerHTML += `
-                <div class="noneFound">
-                    <em>None Found</em>
-                </div>
-            `;
+
         }
+        customerHTML += `
+                    <tr class="search-sf" style="display: none;"><td class="text-muted" colspan="4">No entries found.</td></tr>
+                </tbody>
+            </table>
+        `;
         customerHTML += `
             </div>
          `;

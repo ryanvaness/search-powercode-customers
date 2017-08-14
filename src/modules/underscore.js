@@ -1,3 +1,4 @@
+import { debounce } from './utilities';
 let __ = function (selector) {
     this.element = (typeof selector === "string") ? document.getElementById(selector) : selector;
 };
@@ -18,8 +19,12 @@ __.prototype = {
         return new __(elem);
     },
 
-    find: function (selector) {
+    findAll: function (selector) {
         return new __(this.element.querySelectorAll(selector));
+    },
+
+    findOne: function (selector) {
+        return new __(this.element.querySelector(selector));
     },
 
     remove: function () {
@@ -98,21 +103,32 @@ __.prototype = {
     },
 
     filterTable: function () {
-        for (let elem of this.get()) {
-            elem.addEventListener('keyup', function handleKeyUp() {
-                let _this = _(this),
-                    search = _this.get().value.toLowerCase(),
-                    _target = _this.closestClass('panel-body').next(),
-                    _rows = _target.find('tbody tr');
+        let handleKeyUp = debounce(function handleKeyUp() {
+            let _this   = _(this),
+                filter  = _this.get().value.toLowerCase(),
+                _target = _this.closestClass('panel-body').next(),
+                _tBody   = _target.findOne('tbody'),
+                _rows   = _tBody.findAll('tr');
 
-                if (search === '') {
-                    _rows.show();
-                } else {
-                    for (let row of _rows.get()) {
-                        row.innerText.toLowerCase().indexOf(search) === -1 ? _(row).hide() : _(row).show();
+            if (filter === '') {
+                _rows.show();
+                _tBody.findOne('.search-sf').hide();
+            } else {
+                let anyAreVisible = false;
+                for (let row of _rows.get()) {
+                    row.innerText.toLowerCase().indexOf(filter) === -1 ? _(row).hide() : _(row).show();
+                    if (_(row).isVisible() && !_(row).hasClass('search-sf')) {
+                        anyAreVisible = true;
                     }
                 }
-            });
+                _tBody.findOne('.search-sf').hide();
+                if (!anyAreVisible) {
+                    _tBody.findOne('.search-sf').show();
+                }
+            }
+        }, 250);
+        for (let elem of this.get()) {
+            elem.addEventListener('keyup', handleKeyUp);
         }
     }
 

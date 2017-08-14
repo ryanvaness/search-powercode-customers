@@ -6,7 +6,7 @@ $brand-primary: #00B0FF;
 @import 'node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
 
 .search-box {
-  background-color: #00B0FF;
+  background-color: $brand-primary;
   padding: 30px;
 
   &.row {

@@ -20,15 +20,13 @@ if (empty($_POST['searchString'])) {
 $endpoints = array(
     array(
         'url' => "https://ryan.powercode.com:444/api/1/",
-        'apiKey' => "179dduwll9ybbnvsd64bquitlhqbuyds"
+        'apiKey' => "1dk6uemzhf27zfashyr3mmg8sgmqv0r1",
+        'name' => 'Powercode 1'
     ),
     array(
         'url' => "https://172.17.255.52:444/api/1/",
-        'apiKey' => "zt1w2wfzpmln4c55gkpbzxbhq73nktx1"
-    ),
-    array(
-        'url' => "https://172.17.255.166:444/api/1/",
-        'apiKey' => "kv8tntitonn4nc1zxifjm3f6xw0uwfw0"
+        'apiKey' => "4zscbemacol8axaswsq0nhddnjp4illd",
+        'name' => 'Powercode 2'
     )
 );
 
@@ -61,6 +59,7 @@ foreach ($endpoints as $endpoint) {
             );
         }
         $return['url'] = preg_replace('/\/api\/1\/?/', '', $endpoint['url']);
+        $return['name'] = $endpoint['name'];
 
         array_push($result, $return);
 
