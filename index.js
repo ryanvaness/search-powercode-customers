@@ -57,11 +57,11 @@
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _axios = __webpack_require__(3);
+	var _axios = __webpack_require__(4);
 
 	var _axios2 = _interopRequireDefault(_axios);
 
-	var _sweetalert = __webpack_require__(29);
+	var _sweetalert = __webpack_require__(30);
 
 	var _sweetalert2 = _interopRequireDefault(_sweetalert);
 
@@ -112,6 +112,7 @@
 	                _panelBody.hide();
 	            } else {
 	                _panelBody.show();
+	                _panelBody.findOne('#customer-table-filter').get().focus();
 	            }
 	        }
 	    });
@@ -124,7 +125,8 @@
 	                return generateCustomerHTML(customer, pc.url);
 	            }).join('');
 	        }
-	        customerHTML += '\n                    <tr class="search-sf" style="display: none;"><td class="text-muted" colspan="4">No entries found.</td></tr>\n                </tbody>\n            </table>\n        ';
+	        var hideNoEntries = pc.customers.length ? 'style="display: none;"' : '';
+	        customerHTML += '\n                    <tr class="search-sf" ' + hideNoEntries + '><td class="text-muted" colspan="4">No entries found.</td></tr>\n                </tbody>\n            </table>\n        ';
 	        customerHTML += '\n            </div>\n         ';
 
 	        return customerHTML;
@@ -146,7 +148,7 @@
 	    value: true
 	});
 
-	var _utilities = __webpack_require__(30);
+	var _utilities = __webpack_require__(3);
 
 	var __ = function __(selector) {
 	    this.element = typeof selector === "string" ? document.getElementById(selector) : selector;
@@ -378,20 +380,50 @@
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	module.exports = __webpack_require__(4);
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	// Returns a function, that, as long as it continues to be invoked, will not
+	// be triggered. The function will be called after it stops being called for
+	// N milliseconds. If `immediate` is passed, trigger the function on the
+	// leading edge, instead of the trailing.
+	var debounce = exports.debounce = function debounceHandler(func, wait, immediate) {
+	    var timeout;
+	    return function () {
+	        var context = this,
+	            args = arguments;
+	        var later = function later() {
+	            timeout = null;
+	            if (!immediate) func.apply(context, args);
+	        };
+	        var callNow = immediate && !timeout;
+	        clearTimeout(timeout);
+	        timeout = setTimeout(later, wait);
+	        if (callNow) func.apply(context, args);
+	    };
+	};
 
 /***/ },
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
+	module.exports = __webpack_require__(5);
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
-	var utils = __webpack_require__(5);
-	var bind = __webpack_require__(6);
-	var Axios = __webpack_require__(7);
-	var defaults = __webpack_require__(8);
+	var utils = __webpack_require__(6);
+	var bind = __webpack_require__(7);
+	var Axios = __webpack_require__(8);
+	var defaults = __webpack_require__(9);
 
 	/**
 	 * Create an instance of Axios
@@ -424,15 +456,15 @@
 	};
 
 	// Expose Cancel & CancelToken
-	axios.Cancel = __webpack_require__(26);
-	axios.CancelToken = __webpack_require__(27);
-	axios.isCancel = __webpack_require__(23);
+	axios.Cancel = __webpack_require__(27);
+	axios.CancelToken = __webpack_require__(28);
+	axios.isCancel = __webpack_require__(24);
 
 	// Expose all/spread
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(28);
+	axios.spread = __webpack_require__(29);
 
 	module.exports = axios;
 
@@ -441,12 +473,12 @@
 
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var bind = __webpack_require__(6);
+	var bind = __webpack_require__(7);
 
 	/*global toString:true*/
 
@@ -746,7 +778,7 @@
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -763,17 +795,17 @@
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var defaults = __webpack_require__(8);
-	var utils = __webpack_require__(5);
-	var InterceptorManager = __webpack_require__(20);
-	var dispatchRequest = __webpack_require__(21);
-	var isAbsoluteURL = __webpack_require__(24);
-	var combineURLs = __webpack_require__(25);
+	var defaults = __webpack_require__(9);
+	var utils = __webpack_require__(6);
+	var InterceptorManager = __webpack_require__(21);
+	var dispatchRequest = __webpack_require__(22);
+	var isAbsoluteURL = __webpack_require__(25);
+	var combineURLs = __webpack_require__(26);
 
 	/**
 	 * Create a new instance of Axios
@@ -854,13 +886,13 @@
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var utils = __webpack_require__(5);
-	var normalizeHeaderName = __webpack_require__(10);
+	var utils = __webpack_require__(6);
+	var normalizeHeaderName = __webpack_require__(11);
 
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -877,10 +909,10 @@
 	  var adapter;
 	  if (typeof XMLHttpRequest !== 'undefined') {
 	    // For browsers use XHR adapter
-	    adapter = __webpack_require__(11);
+	    adapter = __webpack_require__(12);
 	  } else if (typeof process !== 'undefined') {
 	    // For node use HTTP adapter
-	    adapter = __webpack_require__(11);
+	    adapter = __webpack_require__(12);
 	  }
 	  return adapter;
 	}
@@ -951,10 +983,10 @@
 
 	module.exports = defaults;
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -1140,12 +1172,12 @@
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(5);
+	var utils = __webpack_require__(6);
 
 	module.exports = function normalizeHeaderName(headers, normalizedName) {
 	  utils.forEach(headers, function processHeader(value, name) {
@@ -1158,18 +1190,18 @@
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	var utils = __webpack_require__(5);
-	var settle = __webpack_require__(12);
-	var buildURL = __webpack_require__(15);
-	var parseHeaders = __webpack_require__(16);
-	var isURLSameOrigin = __webpack_require__(17);
-	var createError = __webpack_require__(13);
-	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(18);
+	var utils = __webpack_require__(6);
+	var settle = __webpack_require__(13);
+	var buildURL = __webpack_require__(16);
+	var parseHeaders = __webpack_require__(17);
+	var isURLSameOrigin = __webpack_require__(18);
+	var createError = __webpack_require__(14);
+	var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(19);
 
 	module.exports = function xhrAdapter(config) {
 	  return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -1265,7 +1297,7 @@
 	    // This is only done if running in a standard browser environment.
 	    // Specifically not if we're in a web worker, or react-native.
 	    if (utils.isStandardBrowserEnv()) {
-	      var cookies = __webpack_require__(19);
+	      var cookies = __webpack_require__(20);
 
 	      // Add xsrf header
 	      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -1339,15 +1371,15 @@
 	  });
 	};
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var createError = __webpack_require__(13);
+	var createError = __webpack_require__(14);
 
 	/**
 	 * Resolve or reject a Promise based on response status.
@@ -1373,12 +1405,12 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var enhanceError = __webpack_require__(14);
+	var enhanceError = __webpack_require__(15);
 
 	/**
 	 * Create an Error with the specified message, config, error code, and response.
@@ -1396,7 +1428,7 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1421,12 +1453,12 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(5);
+	var utils = __webpack_require__(6);
 
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -1495,12 +1527,12 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(5);
+	var utils = __webpack_require__(6);
 
 	/**
 	 * Parse headers into an object
@@ -1538,12 +1570,12 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(5);
+	var utils = __webpack_require__(6);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -1612,7 +1644,7 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1654,12 +1686,12 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(5);
+	var utils = __webpack_require__(6);
 
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -1713,12 +1745,12 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(5);
+	var utils = __webpack_require__(6);
 
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -1771,15 +1803,15 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(5);
-	var transformData = __webpack_require__(22);
-	var isCancel = __webpack_require__(23);
-	var defaults = __webpack_require__(8);
+	var utils = __webpack_require__(6);
+	var transformData = __webpack_require__(23);
+	var isCancel = __webpack_require__(24);
+	var defaults = __webpack_require__(9);
 
 	/**
 	 * Throws a `Cancel` if cancellation has been requested.
@@ -1856,12 +1888,12 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(5);
+	var utils = __webpack_require__(6);
 
 	/**
 	 * Transform the data for a request or a response
@@ -1882,7 +1914,7 @@
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1893,7 +1925,7 @@
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1913,7 +1945,7 @@
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1931,7 +1963,7 @@
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1956,12 +1988,12 @@
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Cancel = __webpack_require__(26);
+	var Cancel = __webpack_require__(27);
 
 	/**
 	 * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -2019,7 +2051,7 @@
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2052,7 +2084,7 @@
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -3699,36 +3731,6 @@
 	})));
 	if (window.Sweetalert2) window.sweetAlert = window.swal = window.Sweetalert2;
 
-
-/***/ },
-/* 30 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	// Returns a function, that, as long as it continues to be invoked, will not
-	// be triggered. The function will be called after it stops being called for
-	// N milliseconds. If `immediate` is passed, trigger the function on the
-	// leading edge, instead of the trailing.
-	var debounce = exports.debounce = function debounceHandler(func, wait, immediate) {
-	    var timeout;
-	    return function () {
-	        var context = this,
-	            args = arguments;
-	        var later = function later() {
-	            timeout = null;
-	            if (!immediate) func.apply(context, args);
-	        };
-	        var callNow = immediate && !timeout;
-	        clearTimeout(timeout);
-	        timeout = setTimeout(later, wait);
-	        if (callNow) func.apply(context, args);
-	    };
-	};
 
 /***/ }
 /******/ ]);

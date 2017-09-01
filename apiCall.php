@@ -20,12 +20,12 @@ if (empty($_POST['searchString'])) {
 $endpoints = array(
     array(
         'url' => "https://ryan.powercode.com:444/api/1/",
-        'apiKey' => "1dk6uemzhf27zfashyr3mmg8sgmqv0r1",
+        'apiKey' => "l3g4f1fa82hcnae9p0lesj54pbscz9vb",
         'name' => 'Powercode 1'
     ),
     array(
-        'url' => "https://172.17.255.52:444/api/1/",
-        'apiKey' => "4zscbemacol8axaswsq0nhddnjp4illd",
+        'url' => "https://ryan2.powercode.com:444/api/1/",
+        'apiKey' => "y71xuz05ietbjl70na1o8lb40ed5izfs",
         'name' => 'Powercode 2'
     )
 );
