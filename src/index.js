@@ -80,9 +80,9 @@ import swal from 'sweetalert2';
             }).join('');
 
         }
-        let hideNoEntries = pc.customers.length ? 'style="display: none;"' : '';
+        let hideNoEntries = pc.customers.length ? 'hidden' : '';
         customerHTML += `
-                    <tr class="search-sf" ${hideNoEntries}><td class="text-muted" colspan="4">No entries found.</td></tr>
+                    <tr class="search-sf ${hideNoEntries}"><td class="text-muted" colspan="4">No entries found.</td></tr>
                 </tbody>
             </table>
         `;

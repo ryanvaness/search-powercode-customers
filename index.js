@@ -125,8 +125,8 @@
 	                return generateCustomerHTML(customer, pc.url);
 	            }).join('');
 	        }
-	        var hideNoEntries = pc.customers.length ? 'style="display: none;"' : '';
-	        customerHTML += '\n                    <tr class="search-sf" ' + hideNoEntries + '><td class="text-muted" colspan="4">No entries found.</td></tr>\n                </tbody>\n            </table>\n        ';
+	        var hideNoEntries = pc.customers.length ? 'hidden' : '';
+	        customerHTML += '\n                    <tr class="search-sf ' + hideNoEntries + '"><td class="text-muted" colspan="4">No entries found.</td></tr>\n                </tbody>\n            </table>\n        ';
 	        customerHTML += '\n            </div>\n         ';
 
 	        return customerHTML;
@@ -159,6 +159,31 @@
 	        return this.element;
 	    },
 
+	    addClass: function addClass(className) {
+	        if (this.element.length > 1) {
+	            Array.from(this.element).map(function (elem) {
+	                elem.classList.add(className);
+	            });
+	            return;
+	        }
+	        this.element.classList.add(className);
+	    },
+
+	    removeClass: function removeClass(className) {
+	        if (Array.isArray(this.element)) {
+	            Array.from(this.element).map(function (elem) {
+	                if (_(elem).hasClass(className)) {
+	                    elem.classList.remove(className);
+	                }
+	            });
+	            return;
+	        }
+
+	        if (this.element.classList.contains(className)) {
+	            this.element.classList.remove(className);
+	        }
+	    },
+
 	    closestClass: function closestClass(elemClass) {
 	        var elem = this.element;
 	        while (elem.parentNode) {
@@ -182,7 +207,28 @@
 	        this.element.parentNode.removeChild(this.get());
 	    },
 
+	    replace: function replace(child) {
+	        this.element.parentNode.replaceChild(child, this.element);
+	    },
+
 	    show: function show() {
+	        if (this.element.length > 1) {
+	            Array.from(this.element).map(function (elem) {
+	                elem.style.display = '';
+	                if (!_(elem).isVisible()) {
+	                    elem.style.display = "block";
+	                }
+	            });
+	            return;
+	        }
+
+	        this.element.style.display = "";
+	        if (!this.isVisible()) {
+	            this.element.style.display = "block";
+	        }
+	    },
+
+	    hide: function hide() {
 	        if (this.element.length > 1) {
 	            var _iteratorNormalCompletion = true;
 	            var _didIteratorError = false;
@@ -192,10 +238,7 @@
 	                for (var _iterator = this.get()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	                    var elem = _step.value;
 
-	                    elem.style.display = '';
-	                    if (!_(elem).isVisible()) {
-	                        this.element.style.display = "block";
-	                    }
+	                    elem.style.display = 'none';
 	                }
 	            } catch (err) {
 	                _didIteratorError = true;
@@ -208,42 +251,6 @@
 	                } finally {
 	                    if (_didIteratorError) {
 	                        throw _iteratorError;
-	                    }
-	                }
-	            }
-
-	            return;
-	        }
-
-	        this.element.style.display = "";
-	        if (!this.isVisible()) {
-	            this.element.style.display = "block";
-	        }
-	    },
-
-	    hide: function hide() {
-	        if (this.element.length > 1) {
-	            var _iteratorNormalCompletion2 = true;
-	            var _didIteratorError2 = false;
-	            var _iteratorError2 = undefined;
-
-	            try {
-	                for (var _iterator2 = this.get()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                    var elem = _step2.value;
-
-	                    elem.style.display = 'none';
-	                }
-	            } catch (err) {
-	                _didIteratorError2 = true;
-	                _iteratorError2 = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                        _iterator2.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError2) {
-	                        throw _iteratorError2;
 	                    }
 	                }
 	            }
@@ -301,72 +308,55 @@
 
 	    filterTable: function filterTable() {
 	        var handleKeyUp = (0, _utilities.debounce)(function handleKeyUp() {
-	            var _this = _(this),
-	                filter = _this.get().value.toLowerCase(),
-	                _target = _this.closestClass('panel-body').next(),
-	                _tBody = _target.findOne('tbody'),
-	                _rows = _tBody.findAll('tr');
+	            var fragTBody = document.createDocumentFragment(),
+	                _this = _(this),
+	                filterFor = _this.get().value.toLowerCase(),
+	                _tBody = _this.closestClass('panel-body').next().findOne('tbody'),
+	                rows = _tBody.get().querySelectorAll('tr');
 
-	            if (filter === '') {
-	                _rows.show();
-	                _tBody.findOne('.search-sf').hide();
+	            Array.from(rows).map(function putRowsInFrag(row) {
+	                fragTBody.appendChild(row);
+	            });
+
+	            var rowsFound = Array.from(fragTBody.querySelectorAll('tr')).filter(function filterRows(row) {
+	                _(row).addClass('hidden');
+	                if (!filterFor.length) {
+	                    return true;
+	                }
+	                return row.innerText.toLowerCase().indexOf(filterFor) > -1 && !_(row).hasClass('search-sf');
+	            });
+
+	            if (rowsFound.length) {
+	                _(rowsFound).removeClass('hidden');
 	            } else {
-	                var anyAreVisible = false;
-	                var _iteratorNormalCompletion3 = true;
-	                var _didIteratorError3 = false;
-	                var _iteratorError3 = undefined;
-
-	                try {
-	                    for (var _iterator3 = _rows.get()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-	                        var row = _step3.value;
-
-	                        row.innerText.toLowerCase().indexOf(filter) === -1 ? _(row).hide() : _(row).show();
-	                        if (_(row).isVisible() && !_(row).hasClass('search-sf')) {
-	                            anyAreVisible = true;
-	                        }
-	                    }
-	                } catch (err) {
-	                    _didIteratorError3 = true;
-	                    _iteratorError3 = err;
-	                } finally {
-	                    try {
-	                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
-	                            _iterator3.return();
-	                        }
-	                    } finally {
-	                        if (_didIteratorError3) {
-	                            throw _iteratorError3;
-	                        }
-	                    }
-	                }
-
-	                _tBody.findOne('.search-sf').hide();
-	                if (!anyAreVisible) {
-	                    _tBody.findOne('.search-sf').show();
-	                }
+	                _(fragTBody.querySelector('.search-sf')).removeClass('hidden');
 	            }
+	            var newTBody = document.createElement('tbody');
+	            newTBody.appendChild(fragTBody);
+
+	            _tBody.replace(newTBody);
 	        }, 250);
-	        var _iteratorNormalCompletion4 = true;
-	        var _didIteratorError4 = false;
-	        var _iteratorError4 = undefined;
+	        var _iteratorNormalCompletion2 = true;
+	        var _didIteratorError2 = false;
+	        var _iteratorError2 = undefined;
 
 	        try {
-	            for (var _iterator4 = this.get()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-	                var elem = _step4.value;
+	            for (var _iterator2 = this.get()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                var elem = _step2.value;
 
 	                elem.addEventListener('keyup', handleKeyUp);
 	            }
 	        } catch (err) {
-	            _didIteratorError4 = true;
-	            _iteratorError4 = err;
+	            _didIteratorError2 = true;
+	            _iteratorError2 = err;
 	        } finally {
 	            try {
-	                if (!_iteratorNormalCompletion4 && _iterator4.return) {
-	                    _iterator4.return();
+	                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                    _iterator2.return();
 	                }
 	            } finally {
-	                if (_didIteratorError4) {
-	                    throw _iteratorError4;
+	                if (_didIteratorError2) {
+	                    throw _iteratorError2;
 	                }
 	            }
 	        }

@@ -8,6 +8,31 @@ __.prototype = {
         return this.element;
     },
 
+    addClass: function (className) {
+        if (this.element.length > 1) {
+            Array.from(this.element).map( (elem) => {
+                elem.classList.add(className);
+            });
+            return;
+        }
+        this.element.classList.add(className);
+    },
+
+    removeClass: function (className) {
+        if (Array.isArray(this.element)) {
+            Array.from(this.element).map( (elem) => {
+                if (_(elem).hasClass(className)) {
+                    elem.classList.remove(className);
+                }
+            });
+            return;
+        }
+
+        if (this.element.classList.contains(className)) {
+            this.element.classList.remove(className);
+        }
+    },
+
     closestClass: function (elemClass) {
         let elem = this.element;
         while (elem.parentNode) {
@@ -31,14 +56,18 @@ __.prototype = {
         this.element.parentNode.removeChild(this.get());
     },
 
+    replace: function (child) {
+        this.element.parentNode.replaceChild(child, this.element);
+    },
+
     show: function () {
         if (this.element.length > 1) {
-            for (let elem of this.get()) {
+            Array.from(this.element).map( (elem) => {
                 elem.style.display = '';
                 if (!_(elem).isVisible()) {
-                    this.element.style.display = "block";
+                    elem.style.display = "block";
                 }
-            }
+            });
             return;
         }
 
@@ -104,28 +133,35 @@ __.prototype = {
 
     filterTable: function () {
         let handleKeyUp = debounce(function handleKeyUp() {
-            let _this   = _(this),
-                filter  = _this.get().value.toLowerCase(),
-                _target = _this.closestClass('panel-body').next(),
-                _tBody   = _target.findOne('tbody'),
-                _rows   = _tBody.findAll('tr');
+            let fragTBody  = document.createDocumentFragment(),
+                _this      = _(this),
+                filterFor  = _this.get().value.toLowerCase(),
+                _tBody     = _this.closestClass('panel-body').next().findOne('tbody'),
+                rows       = _tBody.get().querySelectorAll('tr');
 
-            if (filter === '') {
-                _rows.show();
-                _tBody.findOne('.search-sf').hide();
+
+            Array.from(rows).map(function putRowsInFrag(row) {
+                fragTBody.appendChild(row);
+            });
+
+            let rowsFound = Array.from(fragTBody.querySelectorAll('tr')).filter(function filterRows(row) {
+                _(row).addClass('hidden');
+                if (!filterFor.length) {
+                    return true;
+                }
+                return row.innerText.toLowerCase().indexOf(filterFor) > -1 && !_(row).hasClass('search-sf');
+            });
+
+            if (rowsFound.length) {
+                _(rowsFound).removeClass('hidden');
             } else {
-                let anyAreVisible = false;
-                for (let row of _rows.get()) {
-                    row.innerText.toLowerCase().indexOf(filter) === -1 ? _(row).hide() : _(row).show();
-                    if (_(row).isVisible() && !_(row).hasClass('search-sf')) {
-                        anyAreVisible = true;
-                    }
-                }
-                _tBody.findOne('.search-sf').hide();
-                if (!anyAreVisible) {
-                    _tBody.findOne('.search-sf').show();
-                }
+                _(fragTBody.querySelector('.search-sf')).removeClass('hidden');
             }
+            let newTBody = document.createElement('tbody');
+            newTBody.appendChild(fragTBody);
+
+            _tBody.replace(newTBody);
+
         }, 250);
         for (let elem of this.get()) {
             elem.addEventListener('keyup', handleKeyUp);

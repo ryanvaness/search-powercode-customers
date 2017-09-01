@@ -25,7 +25,7 @@ $endpoints = array(
     ),
     array(
         'url' => "https://ryan2.powercode.com:444/api/1/",
-        'apiKey' => "y71xuz05ietbjl70na1o8lb40ed5izfs",
+        'apiKey' => "g5zxt848ipel04gpmg05l8uhdri8hyqt",
         'name' => 'Powercode 2'
     )
 );
