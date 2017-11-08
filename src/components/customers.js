@@ -5,7 +5,9 @@ class Customers extends Component {
         return (
             <div className="row">
                 <div className="col-md-12">
-                    <div id="customers"></div>
+                    <div id="customers">
+                        {console.log(this.props.values)}
+                    </div>
                 </div>
             </div>
         );
