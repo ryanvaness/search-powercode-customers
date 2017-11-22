@@ -6,7 +6,7 @@ class Customers extends React.Component {
             <div className="row">
                 <div className="col-md-12">
                     <div id="customers">
-                        { Object.keys(this.props.values).map( (v, i) => console.log(this.props.values[v]) ) }
+                        { this.props.values.map( (v, i) => console.log(v) ) }
                     </div>
                 </div>
             </div>
