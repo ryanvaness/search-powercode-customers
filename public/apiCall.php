@@ -1,6 +1,10 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 
-if (empty($_REQUEST['searchString'])) {
+$json = file_get_contents('php://input');
+$request = json_decode($json, true);
+
+if (empty($request['searchString'])) {
     echo json_encode(
         array(
             array(
@@ -14,13 +18,13 @@ if (empty($_REQUEST['searchString'])) {
 
 $globalPostBody = array(
     'action' => 'searchCustomers',
-    'searchString' => $_REQUEST['searchString']
+    'searchString' => $request['searchString']
 );
 
 $endpoints = array(
     array(
         'url' => "https://ryan.powercode.com:444/api/1/",
-        'apiKey' => "l3g4f1fa82hcnae9p0lesj54pbscz9vb",
+        'apiKey' => "96oza8201c1bx283l9cefe0k7yuk548t",
         'name' => 'Powercode 1'
     ),
     array(

@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import magGlass from '../assets/icons/magnifying-glass.svg'
+import magGlass from '../images/magnifying-glass.svg';
 
-class Search extends Component {
+class Search extends React.Component {
     state = {
         data: {
             searchString: ''
