@@ -6,7 +6,7 @@ class Customers extends Component {
             <div className="row">
                 <div className="col-md-12">
                     <div id="customers">
-                        {console.log(this.props.values)}
+                        { Object.keys(this.props.values).map( (v, i) => console.log(this.props.values[v]) ) }
                     </div>
                 </div>
             </div>

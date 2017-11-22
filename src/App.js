@@ -8,26 +8,25 @@ class App extends Component {
         this.state = {
             results : []
         }
-        
     }
     
-    handleSearch(e) {
-        e.preventDefault()
-        console.log('submitted!');
+    submit = (data) => {
+        console.log(data)
         this.setState({
             results: {
                 one: [1,2,3,4,5,6],
                 two: [9,8,7,6,5,4]
             } 
         })
-    }
+    };
+
     render() {
         return (
             <div className="container-fluid">
-                <Search onSubmit={(e) => this.handleSearch(e)} />
-                <Customers values={this.state.results}/>
+                <Search submit={this.submit} />
+                <Customers values={this.state.results} />
             </div>
-        );
+        )
     }
 }
 

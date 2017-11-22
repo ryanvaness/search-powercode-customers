@@ -1,11 +1,6 @@
 <?php
 
-$globalPostBody = array(
-    'action' => 'searchCustomers',
-    'searchString' => $_POST['searchString']
-);
-
-if (empty($_POST['searchString'])) {
+if (empty($_REQUEST['searchString'])) {
     echo json_encode(
         array(
             array(
@@ -16,6 +11,11 @@ if (empty($_POST['searchString'])) {
     );
     exit();
 }
+
+$globalPostBody = array(
+    'action' => 'searchCustomers',
+    'searchString' => $_REQUEST['searchString']
+);
 
 $endpoints = array(
     array(
