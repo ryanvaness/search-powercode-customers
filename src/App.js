@@ -4,17 +4,18 @@ import Customers from './components/customers'
 
 class App extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             results: []
         }
     }
 
-    submit = (data) => {
-        fetch('http://172.17.255.8:8001/apiCall.php', {
-            method: 'post',
+    submit = (formData) => {
+        const url = process.env.NODE_ENV === 'development' ? 'http://172.17.255.8:8001/apiCall.php' : '/apiCall.php';
+        fetch(url, {
+            method        : 'post',
             'Content-Type': 'application/json',
-            body: JSON.stringify(data)
+            body          : JSON.stringify(formData)
         })
             .then((response) => response.json())
             .then((data) => this.setState({results: data}))
@@ -25,7 +26,7 @@ class App extends React.Component {
         return (
             <div className="container-fluid">
                 <Search submit={this.submit}/>
-                <Customers values={this.state.results}/>
+                <Customers customers={this.state.results}/>
             </div>
         )
     }

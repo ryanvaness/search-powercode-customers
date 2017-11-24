@@ -4,7 +4,7 @@ import magGlass from '../images/magnifying-glass.svg';
 
 class Search extends React.Component {
     state = {
-        data: {
+        data   : {
             searchString: ''
         },
         loading: false
@@ -17,7 +17,7 @@ class Search extends React.Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        if (!!this.state.data.searchString) {
+        if (this.state.data.searchString) {
             this.props.submit(this.state.data);
         }
     };
@@ -28,7 +28,7 @@ class Search extends React.Component {
                 <div className="col-md-12 show-grid">
                     <form id="searchForm" className="form-inline" onSubmit={ this.onSubmit }>
                         <div className="input-group col-md-12">
-                            <input type="text" className="form-control" placeholder="Search" id="searchString" name="searchString" autoFocus onChange={ this.onChange }/>
+                            <input type="text" className="form-control" placeholder="Search" id="searchString" name="searchString" onChange={ this.onChange }/>
                             <span className="input-group-addon">
                                 <button type="submit" className="btn btn-default" style={{background: 'transparent'}}>
                                     <img src={magGlass} style={{height: 23}} alt="Search"/>
