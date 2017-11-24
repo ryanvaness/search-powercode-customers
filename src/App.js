@@ -1,6 +1,6 @@
 import React from "react";
 import Search from "./components/search";
-import Customers from "./components/customers";
+import Powercodes from "./components/powercodes";
 
 class App extends React.Component {
     constructor(props) {
@@ -29,7 +29,7 @@ class App extends React.Component {
         return (
             <div className="container-fluid">
                 <Search submit={this.submit} />
-                <Customers customers={this.state.results} />
+                <Powercodes powercodes={this.state.results} />
             </div>
         );
     }

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import magGlass from "../images/magnifying-glass.svg";
+import Icon from "./icon";
 
 class Search extends React.Component {
     state = {
@@ -46,11 +46,7 @@ class Search extends React.Component {
                                     className="btn btn-default"
                                     style={{ background: "transparent" }}
                                 >
-                                    <img
-                                        src={magGlass}
-                                        style={{ height: 23 }}
-                                        alt="Search"
-                                    />
+                                    <Icon name="magnifying-glass" size="23" />
                                 </button>
                             </span>
                         </div>
